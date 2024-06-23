@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:garage_inventory/screens/categories_screen.dart';
-import 'package:garage_inventory/screens/inventory_page.dart';
-import 'package:garage_inventory/models/category.dart';
 
 void main() => runApp(const MyApp());
 
@@ -50,20 +48,6 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => CategoriesScreen()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.inventory),
-              title: Text('Inwentaryzacja'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => InventoryPage(
-                      category: Category(id: 'default', name: 'Default'),
-                    ),
-                  ),
                 );
               },
             ),
