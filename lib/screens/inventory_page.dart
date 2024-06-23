@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'package:garage_inventory/models/item.dart';
 
 class InventoryPage extends StatefulWidget {
+  const InventoryPage({Key? key}) : super(key: key);
+
   @override
   _InventoryPageState createState() => _InventoryPageState();
 }
@@ -24,7 +26,7 @@ class _InventoryPageState extends State<InventoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Inwentaryzacja Garażu'),
+        title: const Text('Inwentaryzacja Garażu'),
       ),
       body: Column(
         children: [
@@ -36,7 +38,7 @@ class _InventoryPageState extends State<InventoryPage> {
                   _searchQuery = value.toLowerCase();
                 });
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Szukaj przedmiotów",
                 prefixIcon: Icon(Icons.search),
               ),
@@ -64,15 +66,15 @@ class _InventoryPageState extends State<InventoryPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.edit),
+                        icon: const Icon(Icons.edit),
                         onPressed: () => _editItem(item),
                       ),
                       IconButton(
-                        icon: Icon(Icons.camera_alt),
+                        icon: const Icon(Icons.camera_alt),
                         onPressed: () => _addPhoto(item),
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete),
+                        icon: const Icon(Icons.delete),
                         onPressed: () {
                           setState(() {
                             items.remove(item);
@@ -95,7 +97,7 @@ class _InventoryPageState extends State<InventoryPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addItem,
         tooltip: 'Dodaj przedmiot',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -109,33 +111,33 @@ class _InventoryPageState extends State<InventoryPage> {
         String newItemCategory = "Inne";
 
         return AlertDialog(
-          title: Text('Dodaj nowy przedmiot'),
+          title: const Text('Dodaj nowy przedmiot'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               TextField(
                 onChanged: (value) => newItemName = value,
-                decoration: InputDecoration(hintText: "Nazwa przedmiotu"),
+                decoration: const InputDecoration(hintText: "Nazwa przedmiotu"),
               ),
               TextField(
                 onChanged: (value) =>
                     newItemQuantity = int.tryParse(value) ?? 0,
-                decoration: InputDecoration(hintText: "Ilość"),
+                decoration: const InputDecoration(hintText: "Ilość"),
                 keyboardType: TextInputType.number,
               ),
               TextField(
                 onChanged: (value) => newItemCategory = value,
-                decoration: InputDecoration(hintText: "Kategoria"),
+                decoration: const InputDecoration(hintText: "Kategoria"),
               ),
             ],
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Anuluj'),
+              child: const Text('Anuluj'),
               onPressed: () => Navigator.of(context).pop(),
             ),
             TextButton(
-              child: Text('Dodaj'),
+              child: const Text('Dodaj'),
               onPressed: () {
                 setState(() {
                   items.add(Item(
@@ -164,37 +166,37 @@ class _InventoryPageState extends State<InventoryPage> {
         String editedCategory = item.category;
 
         return AlertDialog(
-          title: Text('Edytuj przedmiot'),
+          title: const Text('Edytuj przedmiot'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               TextField(
                 onChanged: (value) => editedName = value,
-                decoration: InputDecoration(hintText: "Nazwa przedmiotu"),
+                decoration: const InputDecoration(hintText: "Nazwa przedmiotu"),
                 controller: TextEditingController(text: item.name),
               ),
               TextField(
                 onChanged: (value) =>
                     editedQuantity = int.tryParse(value) ?? item.quantity,
-                decoration: InputDecoration(hintText: "Ilość"),
+                decoration: const InputDecoration(hintText: "Ilość"),
                 keyboardType: TextInputType.number,
                 controller:
                     TextEditingController(text: item.quantity.toString()),
               ),
               TextField(
                 onChanged: (value) => editedCategory = value,
-                decoration: InputDecoration(hintText: "Kategoria"),
+                decoration: const InputDecoration(hintText: "Kategoria"),
                 controller: TextEditingController(text: item.category),
               ),
             ],
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Anuluj'),
+              child: const Text('Anuluj'),
               onPressed: () => Navigator.of(context).pop(),
             ),
             TextButton(
-              child: Text('Zapisz'),
+              child: const Text('Zapisz'),
               onPressed: () {
                 setState(() {
                   item.name = editedName;
