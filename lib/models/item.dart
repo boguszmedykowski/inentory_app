@@ -4,14 +4,14 @@ class Item {
   String id;
   String name;
   int quantity;
-  String category;
+  List<String> categories; // Lista kategorii
   File? image;
 
   Item({
     required this.id,
     required this.name,
     required this.quantity,
-    this.category = 'Inne',
+    this.categories = const ['Inne'], // Domyślna kategoria to 'Inne'
     this.image,
   });
 
@@ -20,7 +20,7 @@ class Item {
       'id': id,
       'name': name,
       'quantity': quantity,
-      'category': category,
+      'categories': categories, // Konwertowanie listy kategorii do mapy
       'imagePath': image?.path,
     };
   }
@@ -30,7 +30,8 @@ class Item {
       id: map['id'],
       name: map['name'],
       quantity: map['quantity'],
-      category: map['category'],
+      categories:
+          List<String>.from(map['categories']), // Konwertowanie z mapy do listy
       image: map['imagePath'] != null ? File(map['imagePath']) : null,
     );
   }

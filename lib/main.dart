@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:garage_inventory/screens/categories_screen.dart';
 import 'package:garage_inventory/screens/inventory_page.dart';
+import 'package:garage_inventory/models/category.dart';
 
 void main() => runApp(const MyApp());
 
@@ -13,7 +15,62 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const InventoryPage(),
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Storage'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.category),
+              title: Text('Kategorie'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CategoriesScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.inventory),
+              title: Text('Inwentaryzacja'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => InventoryPage(
+                      category: Category(id: 'default', name: 'Default'),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      body: CategoriesScreen(), // Set CategoriesScreen as the default body
     );
   }
 }

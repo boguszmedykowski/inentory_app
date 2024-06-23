@@ -4,9 +4,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:garage_inventory/models/item.dart';
+import 'package:garage_inventory/models/category.dart';
 
 class InventoryPage extends StatefulWidget {
-  const InventoryPage({Key? key}) : super(key: key);
+  final Category category;
+
+  const InventoryPage({Key? key, required this.category}) : super(key: key);
 
   @override
   _InventoryPageState createState() => _InventoryPageState();
@@ -22,11 +25,26 @@ class _InventoryPageState extends State<InventoryPage> {
     _loadItems();
   }
 
+  void _loadItems() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? encodedData = prefs.getString('items');
+    if (encodedData != null) {
+      final List<Item> allItems = (json.decode(encodedData) as List)
+          .map((item) => Item.fromMap(item))
+          .toList();
+      setState(() {
+        items = allItems
+            .where((item) => item.categories.contains(widget.category.name))
+            .toList();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inwentaryzacja Garażu'),
+        title: Text('Inwentaryzacja ${widget.category.name}'),
       ),
       body: Column(
         children: [
@@ -49,19 +67,21 @@ class _InventoryPageState extends State<InventoryPage> {
               itemCount: items
                   .where((item) =>
                       item.name.toLowerCase().contains(_searchQuery) ||
-                      item.category.toLowerCase().contains(_searchQuery))
+                      item.categories.any((category) =>
+                          category.toLowerCase().contains(_searchQuery)))
                   .length,
               itemBuilder: (context, index) {
                 final filteredItems = items
                     .where((item) =>
                         item.name.toLowerCase().contains(_searchQuery) ||
-                        item.category.toLowerCase().contains(_searchQuery))
+                        item.categories.any((category) =>
+                            category.toLowerCase().contains(_searchQuery)))
                     .toList();
                 final item = filteredItems[index];
                 return ListTile(
                   title: Text(item.name),
                   subtitle: Text(
-                      'Ilość: ${item.quantity} | Kategoria: ${item.category}'),
+                      'Ilość: ${item.quantity} | Kategorie: ${item.categories.join(', ')}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -108,7 +128,7 @@ class _InventoryPageState extends State<InventoryPage> {
       builder: (BuildContext context) {
         String newItemName = "";
         int newItemQuantity = 0;
-        String newItemCategory = "Inne";
+        List<String> newItemCategories = [];
 
         return AlertDialog(
           title: const Text('Dodaj nowy przedmiot'),
@@ -126,8 +146,12 @@ class _InventoryPageState extends State<InventoryPage> {
                 keyboardType: TextInputType.number,
               ),
               TextField(
-                onChanged: (value) => newItemCategory = value,
-                decoration: const InputDecoration(hintText: "Kategoria"),
+                onChanged: (value) {
+                  newItemCategories =
+                      value.split(',').map((e) => e.trim()).toList();
+                },
+                decoration: const InputDecoration(
+                    hintText: "Kategorie (oddzielone przecinkami)"),
               ),
             ],
           ),
@@ -144,7 +168,7 @@ class _InventoryPageState extends State<InventoryPage> {
                     id: DateTime.now().toString(),
                     name: newItemName,
                     quantity: newItemQuantity,
-                    category: newItemCategory,
+                    categories: newItemCategories,
                   ));
                 });
                 _saveItems();
@@ -163,7 +187,7 @@ class _InventoryPageState extends State<InventoryPage> {
       builder: (BuildContext context) {
         String editedName = item.name;
         int editedQuantity = item.quantity;
-        String editedCategory = item.category;
+        List<String> editedCategories = List.from(item.categories);
 
         return AlertDialog(
           title: const Text('Edytuj przedmiot'),
@@ -184,9 +208,15 @@ class _InventoryPageState extends State<InventoryPage> {
                     TextEditingController(text: item.quantity.toString()),
               ),
               TextField(
-                onChanged: (value) => editedCategory = value,
-                decoration: const InputDecoration(hintText: "Kategoria"),
-                controller: TextEditingController(text: item.category),
+                onChanged: (value) {
+                  editedCategories =
+                      value.split(',').map((e) => e.trim()).toList();
+                },
+                decoration: const InputDecoration(
+                    hintText: "Kategorie (oddzielone przecinkami)"),
+                controller: TextEditingController(
+                  text: item.categories.join(', '),
+                ),
               ),
             ],
           ),
@@ -201,7 +231,7 @@ class _InventoryPageState extends State<InventoryPage> {
                 setState(() {
                   item.name = editedName;
                   item.quantity = editedQuantity;
-                  item.category = editedCategory;
+                  item.categories = editedCategories;
                 });
                 _saveItems();
                 Navigator.of(context).pop();
@@ -230,17 +260,5 @@ class _InventoryPageState extends State<InventoryPage> {
       items.map((item) => item.toMap()).toList(),
     );
     await prefs.setString('items', encodedData);
-  }
-
-  Future<void> _loadItems() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? encodedData = prefs.getString('items');
-    if (encodedData != null) {
-      setState(() {
-        items = (json.decode(encodedData) as List)
-            .map((item) => Item.fromMap(item))
-            .toList();
-      });
-    }
   }
 }
