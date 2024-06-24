@@ -10,7 +10,7 @@ class ItemDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Szczegóły Przedmiotu'),
+        title: const Text('Szczegóły Przedmiotu'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -19,27 +19,52 @@ class ItemDetailPage extends StatelessWidget {
           children: [
             Text(
               item.name,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Ilość: ${item.quantity}',
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Kategorie: ${item.categories.join(', ')}',
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
-            SizedBox(height: 16),
-            item.image != null
-                ? Image.file(
-                    item.image!,
-                    width: 200,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  )
-                : Container(),
+            const SizedBox(height: 16),
+            if (item.toolImage != null)
+              Image.file(
+                item.toolImage!,
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            const SizedBox(height: 16),
+            if (item.locationImage != null)
+              Image.file(
+                item.locationImage!,
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            const SizedBox(height: 16),
+            if (item.borrowedTo != null)
+              Text(
+                'Pożyczono do: ${item.borrowedTo}',
+                style: const TextStyle(fontSize: 18),
+              ),
+            const SizedBox(height: 16),
+            if (item.borrowDate != null)
+              Text(
+                'Data pożyczenia: ${item.borrowDate}',
+                style: const TextStyle(fontSize: 18),
+              ),
+            const SizedBox(height: 16),
+            if (item.returnDate != null)
+              Text(
+                'Przewidywana data zwrotu: ${item.returnDate}',
+                style: const TextStyle(fontSize: 18),
+              ),
           ],
         ),
       ),

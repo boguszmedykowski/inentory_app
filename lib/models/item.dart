@@ -4,15 +4,23 @@ class Item {
   String id;
   String name;
   int quantity;
-  List<String> categories; // Lista kategorii
-  File? image;
+  List<String> categories;
+  File? toolImage;
+  File? locationImage;
+  String? borrowedTo;
+  String? borrowDate;
+  String? returnDate;
 
   Item({
     required this.id,
     required this.name,
     required this.quantity,
-    this.categories = const ['Inne'], // Domyślna kategoria to 'Inne'
-    this.image,
+    required this.categories,
+    this.toolImage,
+    this.locationImage,
+    this.borrowedTo,
+    this.borrowDate,
+    this.returnDate,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,8 +28,12 @@ class Item {
       'id': id,
       'name': name,
       'quantity': quantity,
-      'categories': categories, // Konwertowanie listy kategorii do mapy
-      'imagePath': image?.path,
+      'categories': categories,
+      'toolImagePath': toolImage?.path,
+      'locationImagePath': locationImage?.path,
+      'borrowedTo': borrowedTo,
+      'borrowDate': borrowDate,
+      'returnDate': returnDate,
     };
   }
 
@@ -30,9 +42,15 @@ class Item {
       id: map['id'],
       name: map['name'],
       quantity: map['quantity'],
-      categories:
-          List<String>.from(map['categories']), // Konwertowanie z mapy do listy
-      image: map['imagePath'] != null ? File(map['imagePath']) : null,
+      categories: List<String>.from(map['categories']),
+      toolImage:
+          map['toolImagePath'] != null ? File(map['toolImagePath']) : null,
+      locationImage: map['locationImagePath'] != null
+          ? File(map['locationImagePath'])
+          : null,
+      borrowedTo: map['borrowedTo'],
+      borrowDate: map['borrowDate'],
+      returnDate: map['returnDate'],
     );
   }
 }

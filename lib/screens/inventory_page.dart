@@ -115,8 +115,8 @@ class _InventoryPageState extends State<InventoryPage> {
                       ),
                     ],
                   ),
-                  leading: item.image != null
-                      ? Image.file(item.image!,
+                  leading: item.toolImage != null
+                      ? Image.file(item.toolImage!,
                           width: 50, height: 50, fit: BoxFit.cover)
                       : null,
                   onTap: () => Navigator.push(
@@ -145,13 +145,25 @@ class _InventoryPageState extends State<InventoryPage> {
       builder: (BuildContext context) {
         return ItemAddEditDialog(
           availableCategories: availableCategories,
-          onSave: (newItemName, newItemQuantity, newItemCategories) {
+          onSave: (newItemName,
+              newItemQuantity,
+              newItemCategories,
+              newToolImage,
+              newLocationImage,
+              borrowedTo,
+              borrowDate,
+              returnDate) {
             setState(() {
               items.add(Item(
                 id: DateTime.now().toString(),
                 name: newItemName,
                 quantity: newItemQuantity,
                 categories: newItemCategories,
+                toolImage: newToolImage,
+                locationImage: newLocationImage,
+                borrowedTo: borrowedTo,
+                borrowDate: borrowDate,
+                returnDate: returnDate,
               ));
             });
             _saveItems();
@@ -168,11 +180,23 @@ class _InventoryPageState extends State<InventoryPage> {
         return ItemAddEditDialog(
           availableCategories: availableCategories,
           item: item,
-          onSave: (editedName, editedQuantity, editedCategories) {
+          onSave: (editedName,
+              editedQuantity,
+              editedCategories,
+              editedToolImage,
+              editedLocationImage,
+              borrowedTo,
+              borrowDate,
+              returnDate) {
             setState(() {
               item.name = editedName;
               item.quantity = editedQuantity;
               item.categories = editedCategories;
+              item.toolImage = editedToolImage;
+              item.locationImage = editedLocationImage;
+              item.borrowedTo = borrowedTo;
+              item.borrowDate = borrowDate;
+              item.returnDate = returnDate;
             });
             _saveItems();
           },
@@ -186,7 +210,7 @@ class _InventoryPageState extends State<InventoryPage> {
     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
     if (image != null) {
       setState(() {
-        item.image = File(image.path);
+        item.toolImage = File(image.path);
       });
       _saveItems();
     }
